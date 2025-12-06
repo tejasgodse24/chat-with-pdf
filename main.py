@@ -2,12 +2,16 @@
 FastAPI application entry point for Chat with PDF system.
 """
 from fastapi import FastAPI
+from api.routes.file_router import files_router
 
 app = FastAPI(
     title="Chat with PDF",
     description="Hybrid-Inline PDF + RAG Chat System",
     version="0.1.0"
 )
+
+# Include routers
+app.include_router(files_router)
 
 
 @app.get("/")
