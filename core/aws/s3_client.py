@@ -6,6 +6,13 @@ import boto3
 from botocore.exceptions import ClientError, BotoCoreError
 from config import get_settings
 from core.utils.logger import setup_logger
+from core.exceptions import (
+    S3BucketNotFoundError,
+    S3AccessDeniedError,
+    S3KeyNotFoundError,
+    S3UploadError,
+    S3DownloadError
+)
 
 logger = setup_logger(__name__)
 settings = get_settings()
@@ -31,8 +38,9 @@ def generate_presigned_upload_url(s3_key: str, expires_in: int = 3600) -> str:
         Presigned URL string for PUT operation
     
     Raises:
-        ClientError: If AWS S3 operation fails
-        Exception: For other unexpected errors
+        S3BucketNotFoundError: If S3 bucket doesn't exist
+        S3AccessDeniedError: If S3 access is denied
+        S3UploadError: For other S3 errors
     """
     try:
         logger.info(f"Generating presigned upload URL for S3 key: {s3_key}")
@@ -47,31 +55,35 @@ def generate_presigned_upload_url(s3_key: str, expires_in: int = 3600) -> str:
             ExpiresIn=expires_in
         )
         
-        logger.info(f"Successfully generated presigned upload URL for: {s3_key}")
+        logger.info(f"Successfully generated presigned upload URL")
         return url
         
     except ClientError as e:
         error_code = e.response.get('Error', {}).get('Code', 'Unknown')
         error_message = e.response.get('Error', {}).get('Message', str(e))
         
-        logger.error(
-            f"AWS ClientError generating presigned upload URL: "
-            f"Code={error_code}, Message={error_message}, Key={s3_key}"
-        )
-        
-        # Re-raise with preserved error information
-        raise
-        
+        # Translate AWS errors to custom exceptions
+        if error_code == 'NoSuchBucket':
+            raise S3BucketNotFoundError(
+                message=f"S3 bucket not found: {settings.s3_bucket_name}",
+                detail={"bucket": settings.s3_bucket_name, "error_code": error_code}
+            )
+        elif error_code in ['AccessDenied', 'InvalidAccessKeyId', 'SignatureDoesNotMatch']:
+            raise S3AccessDeniedError(
+                message=f"S3 access denied",
+                detail={"bucket": settings.s3_bucket_name, "error_code": error_code}
+            )
+        else:
+            raise S3UploadError(
+                message=f"S3 upload error: {error_message}",
+                detail={"s3_key": s3_key, "error_code": error_code}
+            )
+            
     except BotoCoreError as e:
-        logger.error(f"BotoCoreError generating presigned upload URL: {str(e)}")
-        raise Exception(f"AWS service error: {str(e)}")
-        
-    except Exception as e:
-        logger.error(
-            f"Unexpected error generating presigned upload URL: {str(e)}",
-            exc_info=True
+        raise S3UploadError(
+            message=f"AWS service error: {str(e)}",
+            detail={"s3_key": s3_key}
         )
-        raise
 
 
 def generate_presigned_download_url(s3_key: str, expires_in: int = 3600) -> str:
@@ -86,8 +98,9 @@ def generate_presigned_download_url(s3_key: str, expires_in: int = 3600) -> str:
         Presigned URL string for GET operation
     
     Raises:
-        ClientError: If AWS S3 operation fails
-        Exception: For other unexpected errors
+        S3KeyNotFoundError: If S3 key doesn't exist
+        S3AccessDeniedError: If S3 access is denied
+        S3DownloadError: For other S3 errors
     """
     try:
         logger.info(f"Generating presigned download URL for S3 key: {s3_key}")
@@ -101,28 +114,32 @@ def generate_presigned_download_url(s3_key: str, expires_in: int = 3600) -> str:
             ExpiresIn=expires_in
         )
         
-        logger.info(f"Successfully generated presigned download URL for: {s3_key}")
+        logger.info(f"Successfully generated presigned download URL")
         return url
         
     except ClientError as e:
         error_code = e.response.get('Error', {}).get('Code', 'Unknown')
         error_message = e.response.get('Error', {}).get('Message', str(e))
         
-        logger.error(
-            f"AWS ClientError generating presigned download URL: "
-            f"Code={error_code}, Message={error_message}, Key={s3_key}"
-        )
-        
-        # Re-raise with preserved error information
-        raise
-        
+        # Translate AWS errors to custom exceptions
+        if error_code == 'NoSuchKey':
+            raise S3KeyNotFoundError(
+                message=f"S3 key not found: {s3_key}",
+                detail={"s3_key": s3_key, "error_code": error_code}
+            )
+        elif error_code in ['AccessDenied', 'InvalidAccessKeyId', 'SignatureDoesNotMatch']:
+            raise S3AccessDeniedError(
+                message=f"S3 access denied",
+                detail={"bucket": settings.s3_bucket_name, "error_code": error_code}
+            )
+        else:
+            raise S3DownloadError(
+                message=f"S3 download error: {error_message}",
+                detail={"s3_key": s3_key, "error_code": error_code}
+            )
+            
     except BotoCoreError as e:
-        logger.error(f"BotoCoreError generating presigned download URL: {str(e)}")
-        raise Exception(f"AWS service error: {str(e)}")
-        
-    except Exception as e:
-        logger.error(
-            f"Unexpected error generating presigned download URL: {str(e)}",
-            exc_info=True
+        raise S3DownloadError(
+            message=f"AWS service error: {str(e)}",
+            detail={"s3_key": s3_key}
         )
-        raise

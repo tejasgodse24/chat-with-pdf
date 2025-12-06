@@ -27,3 +27,17 @@ class PresignRequest(BaseModel):
             raise ValueError(f'Filename contains invalid characters: {invalid_chars}')
         
         return v
+
+
+class WebhookIngestRequest(BaseModel):
+    """Request model for S3 upload webhook notification"""
+    s3_bucket: str = Field(
+        ...,
+        description="S3 bucket name where file was uploaded",
+        example="swe-test-tejas-godse-pdfs"
+    )
+    s3_key: str = Field(
+        ...,
+        description="S3 object key (path) of the uploaded file",
+        example="uploads/cacc19ff-21f8-4894-bd24-ca93d8c4de4a.pdf"
+    )
