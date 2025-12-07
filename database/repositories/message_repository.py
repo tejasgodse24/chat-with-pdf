@@ -2,7 +2,7 @@
 Message repository for database operations.
 Handles all Message model database queries.
 """
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from sqlalchemy import func
 from typing import List, Optional
 from uuid import UUID
@@ -148,3 +148,28 @@ class MessageRepository:
             .delete()
         self.db.commit()
         return count
+
+    def get_by_conversation_id_with_files(self, conversation_id: UUID) -> List[Message]:
+        """
+        Get messages with file details eagerly loaded (avoids N+1 queries).
+
+        Uses LEFT JOIN to load the file relationship in a single query,
+        preventing the N+1 query problem when accessing msg.file.
+
+        Args:
+            conversation_id: Conversation UUID
+
+        Returns:
+            List of Message objects with .file relationship preloaded
+
+        Example:
+            >>> messages = message_repo.get_by_conversation_id_with_files(conv_id)
+            >>> for msg in messages:
+            ...     if msg.file:  # No additional query needed!
+            ...         print(msg.file.s3_key)
+        """
+        return self.db.query(Message)\
+            .filter(Message.conversation_id == conversation_id)\
+            .options(joinedload(Message.file))\
+            .order_by(Message.created_at.asc())\
+            .all()

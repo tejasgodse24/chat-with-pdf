@@ -73,9 +73,9 @@ def handle_chat_request(
         conversation_id = conversation.id
         logger.info(f"Created new conversation: {conversation_id}")
 
-    # Step 2: Fetch conversation history (new message not yet in DB)
-    logger.info("Fetching conversation history")
-    db_messages = message_repo.get_by_conversation_id(conversation_id)
+    # Step 2: Fetch conversation history with files eagerly loaded (avoids N+1 queries)
+    logger.info("Fetching conversation history with files")
+    db_messages = message_repo.get_by_conversation_id_with_files(conversation_id)
 
     # Use all existing messages (new message not yet saved to DB)
     existing_messages = db_messages

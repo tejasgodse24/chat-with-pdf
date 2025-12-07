@@ -28,7 +28,7 @@ class Conversation(Base):
     )
 
     created_at = Column(
-        DateTime,
+        DateTime(timezone=True),
         nullable=False,
         default=lambda: datetime.now(timezone.utc),
         comment="Timestamp when conversation was started"

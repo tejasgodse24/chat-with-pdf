@@ -86,7 +86,7 @@ class Message(Base):
     )
 
     created_at = Column(
-        DateTime,
+        DateTime(timezone=True),
         nullable=False,
         default=lambda: datetime.now(timezone.utc),
         comment="Timestamp when message was sent"
