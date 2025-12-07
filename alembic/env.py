@@ -14,6 +14,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from database.models.base import Base
 from database.models.file import File
+from database.models.conversation import Conversation
+from database.models.message import Message
 from config import get_settings
 
 # this is the Alembic Config object, which provides
