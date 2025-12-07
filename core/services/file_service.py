@@ -1,6 +1,6 @@
 """
-S3 client for AWS operations.
-Handles presigned URL generation for upload and download.
+File service for file management operations.
+Handles presigned URL generation for file upload and download.
 """
 import boto3
 from botocore.exceptions import ClientError, BotoCoreError
