@@ -67,7 +67,7 @@ async def chat(
             "file_id": null
         }
     """
-    logger.info(f"Received chat request: message_length={len(request.message)}")
+    logger.info(f"Received chat request: message_length={request.message}")
     logger.debug(f"conversation_id={request.conversation_id}, file_id={request.file_id}")
 
     # Call chat handler to process request
@@ -83,6 +83,8 @@ async def chat(
     # Convert retrieved_chunks to response format
     chunk_responses = [
         RetrievedChunk(
+            chunk_id=chunk.get("chunk_id", ""),
+            file_id=chunk.get("file_id", ""),
             chunk_text=chunk.get("chunk_text", ""),
             similarity_score=chunk.get("similarity_score", 0.0)
         )
@@ -200,6 +202,8 @@ async def get_conversation(
         if msg.retrieved_chunks:
             chunks = [
                 RetrievedChunk(
+                    chunk_id=chunk.get("chunk_id", ""),
+                    file_id=chunk.get("file_id", ""),
                     chunk_text=chunk.get("chunk_text", ""),
                     similarity_score=chunk.get("similarity_score", 0.0)
                 )
