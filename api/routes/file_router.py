@@ -7,7 +7,7 @@ from uuid import uuid4, UUID
 
 from api.schemas.request import PresignRequest
 from api.schemas.response import PresignResponse, FileListResponse, FileResponse, FileDetailResponse
-from core.services import generate_presigned_upload_url, generate_presigned_download_url
+from services.file_service.s3_service import generate_presigned_upload_url, generate_presigned_download_url
 from core.exceptions import FileRecordNotFoundError
 from core.utils.logger import setup_logger
 from core.dependencies import get_file_repository
