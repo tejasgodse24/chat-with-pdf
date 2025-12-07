@@ -3,7 +3,7 @@ Request Pydantic models for API endpoints.
 """
 from pydantic import BaseModel, Field, field_validator
 from uuid import UUID
-from typing import Optional
+from typing import Optional, List
 
 
 class PresignRequest(BaseModel):
@@ -63,4 +63,28 @@ class ChatRequest(BaseModel):
         None,
         description="Optional file ID to attach to this message",
         example="cacc19ff-21f8-4894-bd24-ca93d8c4de4a"
+    )
+
+
+class RetrieveRequest(BaseModel):
+    """Request model for retrieve endpoint"""
+    file_ids: List[UUID] = Field(
+        ...,
+        min_length=1,
+        description="List of file UUIDs to search in",
+        example=["cacc19ff-21f8-4894-bd24-ca93d8c4de4a"]
+    )
+    query: str = Field(
+        ...,
+        min_length=1,
+        max_length=1000,
+        description="Search query text",
+        example="What is machine learning?"
+    )
+    top_k: int = Field(
+        default=5,
+        ge=1,
+        le=20,
+        description="Number of top results to return (default: 5, max: 20)",
+        example=5
     )

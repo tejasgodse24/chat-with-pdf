@@ -1,7 +1,7 @@
 """
 File model for tracking uploaded PDF files.
 """
-from sqlalchemy import Column, String, DateTime, Enum as SAEnum
+from sqlalchemy import Column, String, DateTime, Text, Enum as SAEnum
 from sqlalchemy.dialects.postgresql import UUID
 from datetime import datetime, timezone
 import uuid
@@ -62,6 +62,12 @@ class File(Base):
         onupdate=lambda: datetime.now(timezone.utc),
         comment="Timestamp when file was last modified"
     )
-    
-    def __repr__(self): 
+
+    error_message = Column(
+        Text,
+        nullable=True,
+        comment="Error message if ingestion failed"
+    )
+
+    def __repr__(self):
         return f"<File(id={self.id}, status={self.ingestion_status})>"

@@ -74,3 +74,43 @@ class InvalidFileFormatError(ValidationException):
 
 class InvalidS3KeyFormatError(ValidationException):
     """Invalid S3 key format (cannot extract UUID)"""
+
+
+# ============================================================================
+# PDF Processing Exceptions
+# ============================================================================
+
+class PDFProcessingException(ChatWithPDFException):
+    """Base exception for PDF processing errors"""
+
+
+class PDFExtractionError(PDFProcessingException):
+    """Failed to extract text from PDF"""
+
+
+# ============================================================================
+# Vector Database Exceptions
+# ============================================================================
+
+class VectorDatabaseException(ChatWithPDFException):
+    """Base exception for vector database operations"""
+
+
+class UpstashVectorError(VectorDatabaseException):
+    """Base exception for Upstash Vector operations"""
+
+
+class VectorUpsertError(UpstashVectorError):
+    """Failed to upsert vectors to Upstash"""
+
+
+class VectorQueryError(UpstashVectorError):
+    """Failed to query vectors from Upstash"""
+
+
+class VectorDeleteError(UpstashVectorError):
+    """Failed to delete vectors from Upstash"""
+
+
+class EmbeddingGenerationError(ChatWithPDFException):
+    """Failed to generate embeddings from OpenAI"""

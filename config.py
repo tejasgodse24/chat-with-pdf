@@ -24,6 +24,7 @@ class Settings(BaseSettings):
     # Upstash Vector Configuration (for later milestones)
     upstash_vector_url: str = ""
     upstash_vector_token: str = ""
+    upstash_vector_namespace: str = ""
     
     model_config = SettingsConfigDict(
         env_file=".env",

@@ -90,21 +90,25 @@ class FileRepository:
     def update_status(
         self,
         file_id: UUID,
-        status: IngestionStatus
+        status: IngestionStatus,
+        error_message: Optional[str] = None
     ) -> Optional[File]:
         """
-        Update file ingestion status.
-        
+        Update file ingestion status and optionally set error message.
+
         Args:
             file_id: File UUID
             status: New ingestion status
-        
+            error_message: Optional error message (for failed status)
+
         Returns:
             Updated File object or None if not found
         """
         db_file = self.get_by_id(file_id)
         if db_file:
             db_file.ingestion_status = status
+            if error_message is not None:
+                db_file.error_message = error_message
             self.db.commit()
             self.db.refresh(db_file)
         return db_file

@@ -50,6 +50,8 @@ class FileDetailResponse(BaseModel):
 
 class RetrievedChunk(BaseModel):
     """Schema for a single retrieved chunk"""
+    chunk_id: str
+    file_id: str
     chunk_text: str
     similarity_score: float
 
@@ -98,3 +100,8 @@ class ConversationDetailResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class RetrieveResponse(BaseModel):
+    """Response schema for retrieve endpoint"""
+    results: List[RetrievedChunk]
