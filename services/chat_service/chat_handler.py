@@ -144,19 +144,20 @@ def handle_chat_request(
         logger.info(f"RAG mode available: {len(rag_file_ids)} completed file(s) in conversation")
 
         # Add system instruction to guide tool usage
-        system_instruction = {
-            "role": "system",
-            "content": (
-                f"You have access to {len(rag_file_ids)} uploaded and indexed PDF document(s). "
-                "When the user asks questions about document content, specific information, "
-                "or anything that would require reading the files, use the 'semantic_search' "
-                "tool to retrieve relevant information from these documents. "
-                "Do not guess or make up information - always search the documents first."
-            )
-        }
+        # system_instruction = {
+        #     "role": "system",
+        #     "content": (
+        #         f"You have access to {len(rag_file_ids)} uploaded and indexed PDF document(s). "
+        #         "When the user asks questions about document content, specific information, "
+        #         "or anything that would require reading the files, use the 'semantic_search' "
+        #         "tool to retrieve relevant information from these documents. "
+        #         "Do not guess or make up information - always search the documents first."
+        #     )
+        # }
 
         # Prepend system instruction to context
-        context_with_instruction = [system_instruction] + context_messages
+        # context_with_instruction = [system_instruction] + context_messages
+        context_with_instruction = context_messages
 
         try:
             response_text, tool_call = send_chat_completion_with_tools(

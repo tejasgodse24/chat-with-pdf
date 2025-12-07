@@ -78,9 +78,9 @@ def send_chat_completion(messages: List[Dict[str, Any]]) -> str:
         logger.debug(f"Message count: {len(messages)}")
         logger.debug(f"actual Message : {messages}")
 
-        with open("context_msg.txt", "w", encoding="utf-8") as f:
-            for msg in messages:
-                f.write(str(msg) + "\n")
+        # with open("context_msg.txt", "w", encoding="utf-8") as f:
+        #     for msg in messages:
+        #         f.write(str(msg) + "\n")
 
         response = client.responses.create(
             model=CHAT_MODEL,
