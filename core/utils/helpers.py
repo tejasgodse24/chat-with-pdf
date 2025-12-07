@@ -3,6 +3,7 @@ Helper utility functions.
 """
 from uuid import UUID
 import re
+import base64
 from core.exceptions import InvalidS3KeyFormatError
 
 
@@ -33,3 +34,21 @@ def extract_file_id_from_s3_key(s3_key: str) -> UUID:
     
     uuid_str = match.group(1)
     return UUID(uuid_str)
+
+
+def encode_pdf_to_base64(pdf_bytes: bytes) -> str:
+    """
+    Encode PDF bytes to base64 string.
+
+    Args:
+        pdf_bytes: PDF file content as bytes
+
+    Returns:
+        Base64 encoded string
+
+    Example:
+        >>> pdf_bytes = b'%PDF-1.4...'
+        >>> base64_str = encode_pdf_to_base64(pdf_bytes)
+        >>> # Returns: "JVBERi0xLjQK..."
+    """
+    return base64.b64encode(pdf_bytes).decode('utf-8')

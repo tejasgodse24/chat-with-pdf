@@ -200,7 +200,8 @@ def register_exception_handlers(app: FastAPI):
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             content={
                 "error": "InternalServerError",
-                "message": "An unexpected error occurred. Please try again later.",
+                # "message": "An unexpected error occurred. Please try again later.",
+                "message":str(exc),
                 "detail": {}
             }
         )

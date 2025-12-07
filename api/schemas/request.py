@@ -2,6 +2,8 @@
 Request Pydantic models for API endpoints.
 """
 from pydantic import BaseModel, Field, field_validator
+from uuid import UUID
+from typing import Optional
 
 
 class PresignRequest(BaseModel):
@@ -40,4 +42,25 @@ class WebhookIngestRequest(BaseModel):
         ...,
         description="S3 object key (path) of the uploaded file",
         example="uploads/cacc19ff-21f8-4894-bd24-ca93d8c4de4a.pdf"
+    )
+
+
+class ChatRequest(BaseModel):
+    """Request model for chat endpoint"""
+    message: str = Field(
+        ...,
+        min_length=1,
+        max_length=10000,
+        description="User's message/question",
+        example="What is this document about?"
+    )
+    conversation_id: Optional[UUID] = Field(
+        None,
+        description="Optional conversation ID. If not provided, a new conversation is created.",
+        example="550e8400-e29b-41d4-a716-446655440000"
+    )
+    file_id: Optional[UUID] = Field(
+        None,
+        description="Optional file ID to attach to this message",
+        example="cacc19ff-21f8-4894-bd24-ca93d8c4de4a"
     )

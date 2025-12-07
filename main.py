@@ -4,6 +4,7 @@ FastAPI application entry point for Chat with PDF system.
 from fastapi import FastAPI
 from api.routes.file_router import files_router
 from api.routes.webhook_router import webhook_router
+from api.routes.chat_router import chat_router
 from core.handlers import register_exception_handlers
 
 app = FastAPI(
@@ -18,6 +19,7 @@ register_exception_handlers(app)
 # Include routers
 app.include_router(files_router)
 app.include_router(webhook_router)
+app.include_router(chat_router)
 
 
 @app.get("/")

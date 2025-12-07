@@ -143,3 +143,60 @@ def generate_presigned_download_url(s3_key: str, expires_in: int = 3600) -> str:
             message=f"AWS service error: {str(e)}",
             detail={"s3_key": s3_key}
         )
+
+
+def download_pdf_from_s3(s3_key: str) -> bytes:
+    """
+    Download a PDF file from S3 and return its bytes.
+
+    Args:
+        s3_key: The S3 object key (path) for the file
+
+    Returns:
+        PDF file content as bytes
+
+    Raises:
+        S3KeyNotFoundError: If S3 key doesn't exist
+        S3AccessDeniedError: If S3 access is denied
+        S3DownloadError: For other S3 errors
+    """
+    try:
+        logger.info(f"Downloading PDF from S3: {s3_key}")
+
+        response = s3_client.get_object(
+            Bucket=settings.s3_bucket_name,
+            Key=s3_key
+        )
+
+        # Read file content as bytes
+        pdf_bytes = response['Body'].read()
+
+        logger.info(f"Successfully downloaded PDF: {s3_key} ({len(pdf_bytes)} bytes)")
+        return pdf_bytes
+
+    except ClientError as e:
+        error_code = e.response.get('Error', {}).get('Code', 'Unknown')
+        error_message = e.response.get('Error', {}).get('Message', str(e))
+
+        # Translate AWS errors to custom exceptions
+        if error_code == 'NoSuchKey':
+            raise S3KeyNotFoundError(
+                message=f"S3 key not found: {s3_key}",
+                detail={"s3_key": s3_key, "error_code": error_code}
+            )
+        elif error_code in ['AccessDenied', 'InvalidAccessKeyId', 'SignatureDoesNotMatch']:
+            raise S3AccessDeniedError(
+                message=f"S3 access denied",
+                detail={"bucket": settings.s3_bucket_name, "error_code": error_code}
+            )
+        else:
+            raise S3DownloadError(
+                message=f"S3 download error: {error_message}",
+                detail={"s3_key": s3_key, "error_code": error_code}
+            )
+
+    except BotoCoreError as e:
+        raise S3DownloadError(
+            message=f"AWS service error: {str(e)}",
+            detail={"s3_key": s3_key}
+        )
