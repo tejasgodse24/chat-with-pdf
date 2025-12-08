@@ -1,0 +1,286 @@
+{
+	"info": {
+		"_postman_id": "8104b806-1e37-4453-9ce4-56b4f529a916",
+		"name": "New Collection Copy",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "31971917",
+		"_collection_link": "https://team44-4027.postman.co/workspace/tejas~25233787-a885-46d1-afd7-0d3147f4682e/collection/31971917-8104b806-1e37-4453-9ce4-56b4f529a916?action=share&source=collection_link&creator=31971917"
+	},
+	"item": [
+		{
+			"name": "presign",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"filename\": \"qns_bank.pdf\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/presign",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"presign"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "put_presign_request",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/pdf",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "file",
+					"file": {
+						"src": "/D:/New_Coding_2025/Company_Assignments/CellStrat/planning/gen_AI_qns.pdf"
+					}
+				},
+				"url": {
+					"raw": "https://swe-test-tejas-godse-pdfs.s3.amazonaws.com/uploads/89410b86-04ad-488c-9cef-98a02d619437.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA2UC3ARTVF2HLT4SJ%2F20251207%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Date=20251207T211159Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=content-type%3Bhost&X-Amz-Signature=6f5e1fd6f593f0106b866042b5364b33414e7074bb6b08757c43f93862e0ab9b",
+					"protocol": "https",
+					"host": [
+						"swe-test-tejas-godse-pdfs",
+						"s3",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"uploads",
+						"89410b86-04ad-488c-9cef-98a02d619437.pdf"
+					],
+					"query": [
+						{
+							"key": "X-Amz-Algorithm",
+							"value": "AWS4-HMAC-SHA256"
+						},
+						{
+							"key": "X-Amz-Credential",
+							"value": "AKIA2UC3ARTVF2HLT4SJ%2F20251207%2Fap-south-1%2Fs3%2Faws4_request"
+						},
+						{
+							"key": "X-Amz-Date",
+							"value": "20251207T211159Z"
+						},
+						{
+							"key": "X-Amz-Expires",
+							"value": "3600"
+						},
+						{
+							"key": "X-Amz-SignedHeaders",
+							"value": "content-type%3Bhost"
+						},
+						{
+							"key": "X-Amz-Signature",
+							"value": "6f5e1fd6f593f0106b866042b5364b33414e7074bb6b08757c43f93862e0ab9b"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "webhook_ingest_not_required",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"s3_bucket\": \"swe-test-tejas-godse-pdfs\",\r\n  \"s3_key\": \"uploads/5a65fc1c-96eb-42d4-8ec6-a1294328ec84.pdf\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/webhook/ingest",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"webhook",
+						"ingest"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get_all_files",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/files",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"files"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get_file_detail",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/files/44589444-c2cd-4ef3-bb68-f35ac117df6e",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"files",
+						"44589444-c2cd-4ef3-bb68-f35ac117df6e"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "chat",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n//   \"message\": \"what is best time to visit REDTOWN, GREENLAND\",\r\n  \"message\": \"what is the question no 21\",\r\n//   \"message\": \"what is Best Time to Visit in STARVILLE - BLUELAND\",\r\n//   \"message\": \"hellow how are you\"\r\n//   \"message\": \"what is your name\",\r\n  \"conversation_id\": \"2aff623c-5424-4e48-993c-1da523e5d1b4\",\r\n  \"file_id\": \"89410b86-04ad-488c-9cef-98a02d619437\"\r\n//   \"file_id\": \"44589444-c2cd-4ef3-bb68-f35ac117df6e\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/chat",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"chat"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get_all_conversations",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/chats",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"chats"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get_conversation_details",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/chats/d0411a29-8175-4664-9faf-3608e912052f",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"chats",
+						"d0411a29-8175-4664-9faf-3608e912052f"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "retrieve",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"file_ids\": [\r\n    \"44589444-c2cd-4ef3-bb68-f35ac117df6e\"\r\n  ],\r\n  \"query\": \"What is the currency in starville\",\r\n  \"top_k\": 5\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/retrieve",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"retrieve"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
